@@ -8,10 +8,20 @@
             <tree string="Odoo Services">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="date_start"/>
-                <field name="date_end"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
                 <field name="state"/>
             </tree>
+        </field>
+    </record>
+	
+	<record id="odoo_config_form" model="ir.ui.view">
+        <field name="name">odoo_service.config.form</field>
+        <field name="model">odoo_service.odoo_service_config</field>
+        <field name="arch" type="xml">
+            <form string="Odoo Configuration">
+                <field name="name" string="Nome"/>
+            </form>
         </field>
     </record>
 
@@ -53,23 +63,52 @@
                                    context="{'search_default_customer':1, 'show_address': 1}"
                                    options='{"always_reload": True}'
                                    domain="[('customer', '=', True)]"/>
+                            <field name="domain_name"/>
+                            <field name="create_git_repo"/>
+                            <field name="create_mail_relay"/>
+                            <field name="create_stage_instance"/>
                         </group>
                         <group>
-                            <field name="date_start"/>
-                            <field name="date_end" />
+                            <field name="start_date"/>
+                            <field name="end_date" />
                         </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Deployment" name="deployment">
                             <group>
+                                <group>
+                                    <field name="image_type"/>
+                                    <field name="image"/>
+                                    <field name="stage_image"/>
+                                </group>
+                                <group>
+                                    <field name="persistent_disk_name"/>
+                                    <field name="persistent_disk_size"/>
+                                    <field name="db_lock"/>
+                                    <field name="db_check"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="deployment"/>
                             </group>
                         </page>
                         <page string="Config" name="config">
                             <group>
+                                <group>
+                                    <field name="db_address"/>
+                                    <field name="db_user"/>
+                                    <field name="db_password"/>
+                                </group>
+                                <group>
+                                    <field name="data_dir"/>
+                                </group>
                             </group>
-                        </page>
-                        <page string="Web Config" name="webconfig">
                             <group>
+                                <field name="config"/>
+                            </group>                        </page>
+                        <page string ="Web Config" name="webconfig">
+                            <group>
+                                <field name="web_config"/>
                             </group>
                         </page>
                     </notebook>
@@ -89,6 +128,13 @@
         <field name="view_mode">tree,form,kanban</field>
     </record>
 
+	<record model="ir.actions.act_window" id="action_odoo_configuration_form">
+        <field name="name">Configuration</field>
+        <field name="res_model">odoo_service.odoo_service_config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+    </record>
+
     <!-- Top menu item -->
     <menuitem name="Odoo Service"
               id="menu_main_odoo_service"
@@ -97,15 +143,18 @@
 
     <menuitem name="Bacheca"
               id="menu_bacheca_odoo_service"
-              parent="menu_main_inter"
+              parent="menu_main_odoo_service"
               sequence="2"/>
 
     <menuitem name="Services"
+              action="action_odoo_service_tree"
               id="menu_services"
               parent="menu_main_odoo_service"
               sequence="3"/>
 
-    <menuitem id="menu_odoo_service_config" name="Configuration" parent="menu_main_odoo_service"
+    <menuitem id="menu_odoo_service_config" name="Configuration"
+              parent="menu_main_odoo_service"
+			  action="action_odoo_configuration_form"
               sequence="100"/>
 
 </odoo>

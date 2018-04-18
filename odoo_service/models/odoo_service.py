@@ -11,8 +11,8 @@ from odoo import models,fields, api, _
 
 class odoo_service(models.Model):
     _name = 'odoo_service.odoo_service'
-    _description = "Contratto Intercettazioni"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = "Odoo Service"
+    _inherit = ['mail.thread']
     _order = "sequence, name, id"
 
     name = fields.Char()
@@ -34,11 +34,9 @@ class odoo_service(models.Model):
         string='Customer',
     )
     domain_name = fields.Char()
-    image_type = fields.Selection(
-        [
-            ('ce','Community')
-            ('ent','Enterprise')
-        ]
+    image_type = fields.Selection([
+            ('ce','Community'),
+            ('ent','Enterprise')]
     )
     start_date = fields.Date()
     end_date = fields.Date()
@@ -60,3 +58,8 @@ class odoo_service(models.Model):
     config = fields.Text()
     web_config = fields.Text()
 
+
+class odoo_service(models.Model):
+    _name = 'odoo_service.odoo_service_config'
+    
+    name = fields.Char(string="Nome")
