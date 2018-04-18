@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="odoo_service_tree" model="ir.ui.view">
+        <field name="name">odoo_service.service.tree</field>
+        <field name="model">odoo_service.odoo_service</field>
+        <field name="arch" type="xml">
+            <tree string="Odoo Services">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="odoo_service_form" model="ir.ui.view">
+        <field name="name">odoo_service.service.form</field>
+        <field name="model">odoo_service.odoo_service</field>
+        <field name="arch" type="xml">
+            <form string="Odoo Service">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','not in',('draft',))]}"
+                    />
+                    <button name="action_close" string="Close" type="object"
+                            class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','in',('draft','closed',))]}"
+                    />
+                    <button name="action_suspend" type="object" string="Suspend"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','not in',('open',))]}"
+                    />
+                    <button name="action_reopen" type="object" string="Reopen"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','not in',('suspended',))]}"
+                    />
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,suspended,closed"/>
+                </header>
+                <sheet string="Service">
+                    <h1 class="mt0">
+                        <label string="Nome"
+                               attrs="{'invisible': [('name','!=',False)]}"/>
+                        <field name="name" placeholder="e.g. my customer cool odoo instance"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field string="Customer" name="partner_id"
+                                   context="{'search_default_customer':1, 'show_address': 1}"
+                                   options='{"always_reload": True}'
+                                   domain="[('customer', '=', True)]"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end" />
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Deployment" name="deployment">
+                            <group>
+                            </group>
+                        </page>
+                        <page string="Config" name="config">
+                            <group>
+                            </group>
+                        </page>
+                        <page string="Web Config" name="webconfig">
+                            <group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_odoo_service_tree">
+        <field name="name">Services</field>
+        <field name="res_model">odoo_service.odoo_service</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="Odoo Service"
+              id="menu_main_odoo_service"
+              web_icon="odoo_service/static/description/icon.png"
+              sequence="50"/>
+
+    <menuitem name="Bacheca"
+              id="menu_bacheca_odoo_service"
+              parent="menu_main_inter"
+              sequence="2"/>
+
+    <menuitem name="Services"
+              id="menu_services"
+              parent="menu_main_odoo_service"
+              sequence="3"/>
+
+    <menuitem id="menu_odoo_service_config" name="Configuration" parent="menu_main_odoo_service"
+              sequence="100"/>
+
+</odoo>
